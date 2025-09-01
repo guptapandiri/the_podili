@@ -27,7 +27,7 @@ class _ViewServiceRequestState extends State<ViewServiceRequest> {
           child: FutureBuilder<DocumentSnapshot>(
             future: EcommerceApp.firestore
                 .collection('services')
-                .document(widget.serviceID)
+                .doc(widget.serviceID)
                 .get(),
             builder: (c, snapshot) {
               Map dataMap;

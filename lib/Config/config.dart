@@ -6,10 +6,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class EcommerceApp {
   static const String appName = 'Podili';
 
-  static SharedPreferences sharedPreferences;
-  static FirebaseUser user;
-  static FirebaseAuth auth;
-  static Firestore firestore;
+  static SharedPreferences? sharedPreferences;
+  static User? user;
+  static FirebaseAuth? auth;
+  static FirebaseFirestore? firestore;
 
   static String collectionUser = "users";
   static String collectionOrders = "orders";

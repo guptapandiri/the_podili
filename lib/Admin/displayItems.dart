@@ -18,7 +18,7 @@ class _DisplayItemsState extends State<DisplayItems> {
       appBar: MyAppBar(),
       drawer: MyDrawer(),
       body: StreamBuilder(
-        stream: Firestore.instance.collection('items').orderBy("publishedDate", descending: true).snapshots(),
+        stream: FirebaseFirestore.instance.collection('items').orderBy("publishedDate", descending: true).snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return Center(
@@ -42,7 +42,7 @@ class _DisplayItemsState extends State<DisplayItems> {
                             color: Colors.grey,
                           ),
                           onPressed: () {
-                            editItem(document.documentID);
+                            editItem(document.id);
                           }),
                       document['isHide'] ? IconButton(
                           icon: Icon(
@@ -50,14 +50,14 @@ class _DisplayItemsState extends State<DisplayItems> {
                             color: Colors.green,
                           ),
                           onPressed: () {
-                            showItem(document.documentID);
+                            showItem(document.id);
                           }) : IconButton(
                           icon: Icon(
                             Icons.visibility_off,
                             color: Colors.red,
                           ),
                           onPressed: () {
-                            hideItem(document.documentID);
+                            hideItem(document.id);
                           })  ,
                     ],
                   ),
@@ -77,20 +77,20 @@ class _DisplayItemsState extends State<DisplayItems> {
   }
 
   void hideItem(String documentID) {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection('items')
-        .document(documentID)
-        .updateData({"isHide": true});
+        .doc(documentID)
+        .update({"isHide": true});
     Fluttertoast.showToast(
         msg: "The Item is Hidden to Users",
         timeInSecForIos: 4);
   }
 
   void showItem(String documentID) {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection('items')
-        .document(documentID)
-        .updateData({"isHide": false});
+        .doc(documentID)
+        .update({"isHide": false});
     Fluttertoast.showToast(
         msg: "The Item is Visible to Users",
         timeInSecForIos: 4);

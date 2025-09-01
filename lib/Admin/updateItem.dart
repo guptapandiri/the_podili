@@ -47,7 +47,7 @@ class _UpdateItemState extends State<UpdateItem> {
           child: FutureBuilder<DocumentSnapshot>(
             future: EcommerceApp.firestore
                 .collection('items')
-                .document(widget.itemID)
+                .doc(widget.itemID)
                 .get(),
             builder: (c, snapshot) {
               Map dataMap;
@@ -175,7 +175,7 @@ class _UpdateItemState extends State<UpdateItem> {
                                   SizedBox(
                                     height: 16,
                                   ),
-                                  submitButton(snapshot.data.documentID)
+                                  submitButton(snapshot.data.id)
                                 ],
                               ),
                             ),
@@ -202,28 +202,30 @@ class _UpdateItemState extends State<UpdateItem> {
 
   capturePhotoWithCamera() async {
     Navigator.pop(context);
-    File imageFile = File(await ImagePicker()
-        .getImage(source: ImageSource.camera, maxHeight: 680.0, maxWidth: 970.0)
-        .then((pickedFile) => pickedFile.path));
+    XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.camera, maxHeight: 680.0, maxWidth: 970.0);
+
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
 
     setState(() {
       file = imageFile;
       imageUpdated = true;
     });
+    }
   }
 
   pickPhotoFromGallery() async {
     Navigator.pop(context);
-    File imageFile = File(await ImagePicker()
-        .getImage(
-          source: ImageSource.gallery,
-        )
-        .then((pickedFile) => pickedFile.path));
+    XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
 
     setState(() {
       file = imageFile;
       imageUpdated = true;
     });
+    }
   }
 
   takeImage(mContext) {
@@ -377,7 +379,7 @@ class _UpdateItemState extends State<UpdateItem> {
   }
 
   Future<String> uploadItemImage(mFileImage) async {
-    final StorageReference storageReference =
+    final Reference storageReference =
         FirebaseStorage.instance.ref().child("Items");
     StorageUploadTask uploadTask =
         storageReference.child("product_$productId.jpg").putFile(mFileImage);
@@ -387,8 +389,8 @@ class _UpdateItemState extends State<UpdateItem> {
   }
 
   updateImageAndInfo(String downloadUrl, String documentID) {
-    final itemsRef = Firestore.instance.collection("items");
-    itemsRef.document(documentID).updateData({
+    final itemsRef = FirebaseFirestore.instance.collection("items");
+    itemsRef.doc(documentID).update({
       "longDescription": description.trim(),
       "price": int.parse(price),
       "thumbnailUrl": downloadUrl,
@@ -408,8 +410,8 @@ class _UpdateItemState extends State<UpdateItem> {
   }
 
   updateItemInfo(String documentID) {
-    final itemsRef = Firestore.instance.collection("items");
-    itemsRef.document(documentID).updateData({
+    final itemsRef = FirebaseFirestore.instance.collection("items");
+    itemsRef.doc(documentID).update({
       "longDescription": description.trim(),
       "price": int.parse(price),
       "lastUpdated": DateTime.now(),
@@ -429,8 +431,8 @@ class _UpdateItemState extends State<UpdateItem> {
   }
 
   updateCategoryAndInfo(String documentID) {
-    final itemsRef = Firestore.instance.collection("items");
-    itemsRef.document(documentID).updateData({
+    final itemsRef = FirebaseFirestore.instance.collection("items");
+    itemsRef.doc(documentID).update({
       "longDescription": description.trim(),
       "price": int.parse(price),
       "lastUpdated": DateTime.now(),
@@ -451,8 +453,8 @@ class _UpdateItemState extends State<UpdateItem> {
   }
 
   updateImageAndCategory(String documentID, String downloadUrl) {
-    final itemsRef = Firestore.instance.collection("items");
-    itemsRef.document(documentID).updateData({
+    final itemsRef = FirebaseFirestore.instance.collection("items");
+    itemsRef.doc(documentID).update({
       "longDescription": description.trim(),
       "price": int.parse(price),
       "thumbnailUrl": downloadUrl,

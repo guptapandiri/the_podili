@@ -99,7 +99,7 @@ class _HomeState extends State<Home> {
         slivers: [
           SliverPersistentHeader(pinned: true, delegate: SearchBoxDelegate()),
           StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance
+              stream: FirebaseFirestore.instance
                   .collection("items")
                   .where("category", isEqualTo: widget.category)
                   .orderBy("publishedDate", descending: true)
@@ -111,15 +111,14 @@ class _HomeState extends State<Home> {
                           child: circularProgress(),
                         ),
                       )
-                    : SliverStaggeredGrid.countBuilder(
+                    : SliverMasonryGrid.count(
                         crossAxisCount: 1,
-                        staggeredTileBuilder: (c) => StaggeredTile.fit(1),
                         itemBuilder: (context, index) {
                           ItemModel model = ItemModel.fromJson(
-                              dataSnapshot.data.documents[index].data);
+                              dataSnapshot.data!.docs[index].data());
                           return sourceInfo(model, context);
                         },
-                        itemCount: dataSnapshot.data.documents.length,
+                        childCount: dataSnapshot.data!.docs.length,
                       );
               })
         ],
@@ -296,13 +295,13 @@ void checkItemInCart(String shortInfoAsID, BuildContext context) {
 
 addItemToCart(String shortInfoAsID, BuildContext context) {
   List tempCartList =
-      EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
+      EcommerceApp.sharedPreferences!.getStringList(EcommerceApp.userCartList);
   tempCartList.add(shortInfoAsID);
 
   EcommerceApp.firestore
       .collection(EcommerceApp.collectionUser)
-      .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-      .updateData({
+      .doc(EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
+      .update({
     EcommerceApp.userCartList: tempCartList,
   }).then((value) {
     Fluttertoast.showToast(msg: "Item Added to CartSuccessfully.");

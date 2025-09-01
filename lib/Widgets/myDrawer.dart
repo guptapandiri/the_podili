@@ -23,7 +23,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print(EcommerceApp.sharedPreferences.getString(EcommerceApp.isAdmin));
+    print(EcommerceApp.sharedPreferences!.getString(EcommerceApp.isAdmin));
     print('Weber');
 
     return Drawer(
@@ -376,7 +376,7 @@ class MyDrawer extends StatelessWidget {
 }
 
 Future<void> _logout() async {
-  /// Method to Logout the `FirebaseUser` (`_firebaseUser`)
+  /// Method to Logout the `User` (`_firebaseUser`)
   try {
     // signout code
     await FirebaseAuth.instance.signOut();

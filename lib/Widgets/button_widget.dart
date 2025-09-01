@@ -13,7 +13,7 @@ class ButtonWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => RaisedButton(
+  Widget build(BuildContext context) => ElevatedButton(
     child: Text(
       text,
       style: TextStyle(fontSize: fontSize),

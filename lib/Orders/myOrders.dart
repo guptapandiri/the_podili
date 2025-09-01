@@ -24,7 +24,7 @@ class _MyOrdersState extends State<MyOrders> {
         body: StreamBuilder<QuerySnapshot>(
           stream: EcommerceApp.firestore
             .collection(EcommerceApp.collectionUser)
-            .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+            .doc(EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
             .collection(EcommerceApp.collectionOrders).orderBy('orderTime', descending: true).snapshots(),
 
           builder: (c, snapshot){
@@ -33,9 +33,9 @@ class _MyOrdersState extends State<MyOrders> {
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (c, index){
                       return FutureBuilder<QuerySnapshot>(
-                          future: Firestore.instance
+                          future: FirebaseFirestore.instance
                             .collection("items")
-                            .where("shortInfo", whereIn: snapshot.data.documents[index].data[EcommerceApp.productID])
+                            .where("shortInfo", whereIn: snapshot.data!.docs[index].data()[EcommerceApp.productID])
                           .getDocuments(),
 
                           builder: (c, snap){
@@ -43,11 +43,11 @@ class _MyOrdersState extends State<MyOrders> {
                             ? OrderCard(
                               itemCount: snap.data.documents.length,
                               data: snap.data.documents,
-                              orderID: snapshot.data.documents[index].documentID,
-                              orderStatus: snapshot.data.documents[index].data['orderStatus'],
-                              cancellationStatus: snapshot.data.documents[index].data['cancellationStatus'],
-                              adminOrderCancellationStatus: snapshot.data.documents[index].data['adminOrderCancellationStatus'],
-                              totalPrice: snapshot.data.documents[index].data['totalAmount'].toString(),
+                              orderID: snapshot.data.documents[index].id,
+                              orderStatus: snapshot.data!.docs[index].data()['orderStatus'],
+                              cancellationStatus: snapshot.data!.docs[index].data()['cancellationStatus'],
+                              adminOrderCancellationStatus: snapshot.data!.docs[index].data()['adminOrderCancellationStatus'],
+                              totalPrice: snapshot.data!.docs[index].data()['totalAmount'].toString(),
                             )
                                 : Center(child: circularProgress(),);
                           }

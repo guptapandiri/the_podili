@@ -37,10 +37,10 @@ class _PaymentPageState extends State<PaymentPage> {
   bool isDiscount = false;
   int i = 0;
   List productList =
-      EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
+      EcommerceApp.sharedPreferences!.getStringList(EcommerceApp.userCartList);
   List phonenumbers = ['+918501014199', '+919848208168', '+918106089784'];
   int deliveryCharges = int.parse(
-      EcommerceApp.sharedPreferences.getString(EcommerceApp.deliveryCharges));
+      EcommerceApp.sharedPreferences!.getString(EcommerceApp.deliveryCharges));
 
   @override
   void initState() {
@@ -55,10 +55,10 @@ class _PaymentPageState extends State<PaymentPage> {
 
   void setTiwilio() async {
     DocumentSnapshot twilioCreds =
-        await Firestore.instance.collection('keys').document('twilio').get();
+        await FirebaseFirestore.instance.collection('keys').doc('twilio').get();
 
     DocumentSnapshot phoneNumbersFB =
-    await Firestore.instance.collection('keys').document('phoneNumbers').get();
+    await FirebaseFirestore.instance.collection('keys').doc('phoneNumbers').get();
 
     twilioFlutter = TwilioFlutter(
         accountSid: twilioCreds.data['accountSid'],
@@ -161,7 +161,7 @@ class _PaymentPageState extends State<PaymentPage> {
                               textAlign: TextAlign.left,
                             ),
                             Text(
-                              "${widget.totalAmount + int.parse(EcommerceApp.sharedPreferences.getString(EcommerceApp.deliveryCharges))}",
+                              "${widget.totalAmount + int.parse(EcommerceApp.sharedPreferences!.getString(EcommerceApp.deliveryCharges))}",
                               style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.green,
@@ -393,7 +393,7 @@ class _PaymentPageState extends State<PaymentPage> {
   addOrderDetails() async {
     String productDescription = '';
     String orderID =
-        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
+        EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID) +
             DateTime.now().millisecondsSinceEpoch.toString();
 
     for (i = 1; i < productList.length; i++) {
@@ -405,12 +405,12 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.totalAmount: widget.totalAmount +
           int.parse(EcommerceApp.sharedPreferences
               .getString(EcommerceApp.deliveryCharges)) - discountAmount,
-      "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
+      "orderBy": EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID),
       "orderID": orderID,
       "prefferedTime": preferredTime,
       "adminOrderCancellationStatus": "notCancelled",
       "cartInfo":
-          EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
+          EcommerceApp.sharedPreferences!.getString(EcommerceApp.cartInfo),
       EcommerceApp.cancellationStatus: "notCancelled",
       EcommerceApp.userOrderConfirmation: "Not Received",
       EcommerceApp.orderStatus: "placed",
@@ -426,12 +426,12 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.totalAmount: widget.totalAmount +
           int.parse(EcommerceApp.sharedPreferences
               .getString(EcommerceApp.deliveryCharges)) - discountAmount,
-      "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
+      "orderBy": EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID),
       "orderID": orderID,
       "prefferedTime": preferredTime,
       "adminOrderCancellationStatus": "notCancelled",
       "cartInfo":
-          EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
+          EcommerceApp.sharedPreferences!.getString(EcommerceApp.cartInfo),
       EcommerceApp.orderStatus: "placed",
       EcommerceApp.cancellationStatus: "notCancelled",
       EcommerceApp.userOrderConfirmation: "Not Received",
@@ -443,21 +443,21 @@ class _PaymentPageState extends State<PaymentPage> {
     }).whenComplete(() => {emptyCartNow()});
 
     if(isDiscount){
-      DocumentSnapshot userData = await Firestore.instance
+      DocumentSnapshot userData = await FirebaseFirestore.instance
           .collection('users')
-          .document(
-          EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+          .doc(
+          EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
           .get();
 
       List couponHistory = userData.data['couponHistory'];
 
       couponHistory.add(couponCode.trim().toUpperCase());
 
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('users')
-          .document(
-          EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-          .updateData({"couponHistory": couponHistory});
+          .doc(
+          EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
+          .update({"couponHistory": couponHistory});
 
 
       phonenumbers.forEach((phone) {
@@ -468,7 +468,7 @@ class _PaymentPageState extends State<PaymentPage> {
     }else{
       phonenumbers.forEach((phone) {
         sendSms(phone,
-            "${widget.model.name} has ordered $productDescription at a price ${widget.totalAmount + int.parse(EcommerceApp.sharedPreferences.getString(EcommerceApp.deliveryCharges))} with Cash on Delivery! contact at ${widget.model.phoneNumber}");
+            "${widget.model.name} has ordered $productDescription at a price ${widget.totalAmount + int.parse(EcommerceApp.sharedPreferences!.getString(EcommerceApp.deliveryCharges))} with Cash on Delivery! contact at ${widget.model.phoneNumber}");
       });
     }
 
@@ -477,7 +477,7 @@ class _PaymentPageState extends State<PaymentPage> {
   placeDiscountOrder() async {
     String productDescription = '';
     String orderID =
-        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
+        EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID) +
             DateTime.now().millisecondsSinceEpoch.toString();
 
     for (i = 1; i < productList.length; i++) {
@@ -489,12 +489,12 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.totalAmount: widget.totalAmount +
           int.parse(EcommerceApp.sharedPreferences
               .getString(EcommerceApp.deliveryCharges)) - discountAmount,
-      "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
+      "orderBy": EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID),
       "orderID": orderID,
       "prefferedTime": preferredTime,
       "adminOrderCancellationStatus": "notCancelled",
       "cartInfo":
-          EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
+          EcommerceApp.sharedPreferences!.getString(EcommerceApp.cartInfo),
       EcommerceApp.cancellationStatus: "notCancelled",
       EcommerceApp.userOrderConfirmation: "Not Received",
       EcommerceApp.orderStatus: "placed",
@@ -505,21 +505,21 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.isSuccess: true,
     }).whenComplete(() => {emptyCartNow()});
 
-    DocumentSnapshot userData = await Firestore.instance
+    DocumentSnapshot userData = await FirebaseFirestore.instance
         .collection('users')
-        .document(
-            EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+        .doc(
+            EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
         .get();
 
     List couponHistory = userData.data['couponHistory'];
 
     couponHistory.add(couponCode.trim().toUpperCase());
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
-        .document(
-            EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-        .updateData({"couponHistory": couponHistory});
+        .doc(
+            EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
+        .update({"couponHistory": couponHistory});
 
     phonenumbers.forEach((phone) {
       sendSms(phone,
@@ -533,13 +533,13 @@ class _PaymentPageState extends State<PaymentPage> {
     EcommerceApp.sharedPreferences
         .setStringList(EcommerceApp.userCartList, ["garbageValue"]);
     List tempList =
-        EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
+        EcommerceApp.sharedPreferences!.getStringList(EcommerceApp.userCartList);
 
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection("users")
-        .document(
-            EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-        .updateData({EcommerceApp.userCartList: tempList}).then((value) {
+        .doc(
+            EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
+        .update({EcommerceApp.userCartList: tempList}).then((value) {
       EcommerceApp.sharedPreferences
           .setStringList(EcommerceApp.userCartList, tempList);
       Provider.of<CartItemCounter>(context, listen: false).displayResult();
@@ -555,18 +555,18 @@ class _PaymentPageState extends State<PaymentPage> {
   Future writeOrderDetailsForUser(Map<String, dynamic> data) async {
     await EcommerceApp.firestore
         .collection(EcommerceApp.collectionUser)
-        .document(
-            EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+        .doc(
+            EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
         .collection(EcommerceApp.collectionOrders)
-        .document(data['orderID'])
-        .setData(data);
+        .doc(data['orderID'])
+        .set(data);
   }
 
   Future writeOrderDetailsForAdmin(Map<String, dynamic> data) async {
     await EcommerceApp.firestore
         .collection(EcommerceApp.collectionOrders)
-        .document(data['orderID'])
-        .setData(data);
+        .doc(data['orderID'])
+        .set(data);
     _onOrderSuccess();
   }
 
@@ -574,9 +574,9 @@ class _PaymentPageState extends State<PaymentPage> {
     String productDescription = '';
 
     DocumentSnapshot snapshot =
-        await Firestore.instance.collection('keys').document('razor_pay').get();
+        await FirebaseFirestore.instance.collection('keys').doc('razor_pay').get();
 
-    String razorPayKey = snapshot.data['key'];
+    String razorPayKey = snapshot.data()!['key'];
 
     for (i = 1; i < productList.length; i++) {
       productDescription = productDescription + productList[i] + ' ';
@@ -611,7 +611,7 @@ class _PaymentPageState extends State<PaymentPage> {
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
     String productDescription = '';
     String orderID =
-        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
+        EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID) +
             DateTime.now().millisecondsSinceEpoch.toString();
 
     for (i = 1; i < productList.length; i++) {
@@ -626,11 +626,11 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.totalAmount: widget.totalAmount +
           int.parse(EcommerceApp.sharedPreferences
               .getString(EcommerceApp.deliveryCharges)) - discountAmount,
-      "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
+      "orderBy": EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID),
       "orderID": orderID,
       "adminOrderCancellationStatus": "notCancelled",
       "cartInfo":
-          EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
+          EcommerceApp.sharedPreferences!.getString(EcommerceApp.cartInfo),
       "prefferedTime": preferredTime,
       EcommerceApp.cancellationStatus: "notCancelled",
       EcommerceApp.userOrderConfirmation: "Not Received",
@@ -648,11 +648,11 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.totalAmount: widget.totalAmount +
           int.parse(EcommerceApp.sharedPreferences
               .getString(EcommerceApp.deliveryCharges)) - discountAmount,
-      "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
+      "orderBy": EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID),
       "orderID": orderID,
       "adminOrderCancellationStatus": "notCancelled",
       "cartInfo":
-          EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
+          EcommerceApp.sharedPreferences!.getString(EcommerceApp.cartInfo),
       "prefferedTime": preferredTime,
       EcommerceApp.orderStatus: "placed",
       EcommerceApp.cancellationStatus: "notCancelled",
@@ -666,21 +666,21 @@ class _PaymentPageState extends State<PaymentPage> {
     }).whenComplete(() => {emptyCartNow()});
 
     if(isDiscount){
-      DocumentSnapshot userData = await Firestore.instance
+      DocumentSnapshot userData = await FirebaseFirestore.instance
           .collection('users')
-          .document(
-          EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+          .doc(
+          EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
           .get();
 
       List couponHistory = userData.data['couponHistory'];
 
       couponHistory.add(couponCode.trim().toUpperCase());
 
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('users')
-          .document(
-          EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-          .updateData({"couponHistory": couponHistory});
+          .doc(
+          EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
+          .update({"couponHistory": couponHistory});
 
 
       phonenumbers.forEach((phone) {
@@ -691,7 +691,7 @@ class _PaymentPageState extends State<PaymentPage> {
     }else{
       phonenumbers.forEach((phone) {
         sendSms(phone,
-            "${widget.model.name} has ordered $productDescription at a price ${widget.totalAmount + int.parse(EcommerceApp.sharedPreferences.getString(EcommerceApp.deliveryCharges))} and paid online! contact at ${widget.model.phoneNumber}");
+            "${widget.model.name} has ordered $productDescription at a price ${widget.totalAmount + int.parse(EcommerceApp.sharedPreferences!.getString(EcommerceApp.deliveryCharges))} and paid online! contact at ${widget.model.phoneNumber}");
       });
     }
 
@@ -835,17 +835,17 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Future<bool> checkRecordExists() async {
-    DocumentSnapshot couponSnapshot = await Firestore.instance
+    DocumentSnapshot couponSnapshot = await FirebaseFirestore.instance
         .collection('coupon_codes')
-        .document(couponCode.trim().toUpperCase())
+        .doc(couponCode.trim().toUpperCase())
         .get();
     return couponSnapshot.exists;
   }
 
   applyCoupon() async {
-    DocumentSnapshot couponSnapshot = await Firestore.instance
+    DocumentSnapshot couponSnapshot = await FirebaseFirestore.instance
         .collection('coupon_codes')
-        .document(couponCode.trim().toUpperCase())
+        .doc(couponCode.trim().toUpperCase())
         .get();
 
     if(couponSnapshot.data['type']=="first"){
@@ -856,17 +856,17 @@ class _PaymentPageState extends State<PaymentPage> {
         discountAmount = couponSnapshot.data['discountAmount'];
       });
 
-      DocumentSnapshot userSnapshot = await Firestore.instance
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
           .collection('users')
-          .document(
-          EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+          .doc(
+          EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
           .get();
 
       List couponHistory = userSnapshot.data['couponHistory'];
       String itemInfo = couponSnapshot.data['shortInfo'];
       int items = couponSnapshot.data['items'];
       List cartList =
-      EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
+      EcommerceApp.sharedPreferences!.getStringList(EcommerceApp.userCartList);
 
       if (items != cartList.length - 1) {
         setState(() {
@@ -927,7 +927,7 @@ class _PaymentPageState extends State<PaymentPage> {
       List itemInfo = couponSnapshot.data['itemList'];
       int items = couponSnapshot.data['items'];
       List<String> cartList =
-      EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
+      EcommerceApp.sharedPreferences!.getStringList(EcommerceApp.userCartList);
 
       if (items != cartList.length - 1) {
         setState(() {

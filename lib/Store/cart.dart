@@ -59,7 +59,7 @@ class _CartPageState extends State<CartPage> {
   void loadValues() async {
 
     DocumentSnapshot serviceCharges =
-    await Firestore.instance.collection('keys').document('service_charges').get();
+    await FirebaseFirestore.instance.collection('keys').doc('service_charges').get();
 
     above_1000 = int.parse(serviceCharges.data['']);
     above_2000 = int.parse(serviceCharges.data['']);
@@ -146,7 +146,7 @@ class _CartPageState extends State<CartPage> {
                             delegate: SliverChildBuilderDelegate(
                               (context, index) {
                                 ItemModel model = ItemModel.fromJson(
-                                    snapshot.data.documents[index].data);
+                                    snapshot.data!.docs[index].data());
 
                                 if (index == 0) {
                                   totalAmount = 0;
@@ -414,14 +414,14 @@ class _CartPageState extends State<CartPage> {
 
   removeItemFromUserCart(String shortInfoAsId) {
     List tempCartList =
-        EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
+        EcommerceApp.sharedPreferences!.getStringList(EcommerceApp.userCartList);
     tempCartList.remove(shortInfoAsId);
 
     EcommerceApp.firestore
         .collection(EcommerceApp.collectionUser)
-        .document(
-            EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-        .updateData({
+        .doc(
+            EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
+        .update({
       EcommerceApp.userCartList: tempCartList,
     }).then((value) {
       Fluttertoast.showToast(msg: "Item Removed Successfully.");
@@ -436,7 +436,7 @@ class _CartPageState extends State<CartPage> {
 
   addQuantity(List<int> quantity, HashSet<String> category) {
     List tempCartList =
-        EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
+        EcommerceApp.sharedPreferences!.getStringList(EcommerceApp.userCartList);
 
     //tempCartList.remove(shortInfoAsId);
     int c = 0;
@@ -493,14 +493,14 @@ class _CartPageState extends State<CartPage> {
 
     // EcommerceApp.firestore
     //     .collection(EcommerceApp.collectionUser)
-    //     .document(
-    //         EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-    //     .updateData({
+    //     .doc(
+    //         EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
+    //     .update({
     //   EcommerceApp.userCartList: cartWithQuantity,
     // }).then((value) {
     // Fluttertoast.showToast(msg: "Item Removed Successfully.");
 
-    EcommerceApp.sharedPreferences.setString(EcommerceApp.cartInfo, info);
+    EcommerceApp.sharedPreferences!.setString(EcommerceApp.cartInfo, info);
 
     // Provider.of<CartItemCounter>(context, listen: false).displayResult();
     // totalAmount = 0;

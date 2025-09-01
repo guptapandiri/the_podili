@@ -14,7 +14,7 @@ class ErrorAlertDialog extends StatelessWidget
       key: key,
       content: Text(message),
       actions: <Widget>[
-        RaisedButton(onPressed: ()
+        ElevatedButton(onPressed: ()
         {
           Navigator.pop(context);
         },

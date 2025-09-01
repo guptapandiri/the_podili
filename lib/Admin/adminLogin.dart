@@ -126,7 +126,7 @@ class _AdminSignInScreenState extends State<AdminSignInScreen> {
               color: Colors.pink,
             ),
             SizedBox(height: 20.0),
-            FlatButton.icon(
+            TextButton.icon(
               onPressed: () => Navigator.push(context,
                   MaterialPageRoute(builder: (context) => AuthenticScreen())),
               icon: (Icon(
@@ -147,7 +147,7 @@ class _AdminSignInScreenState extends State<AdminSignInScreen> {
   }
 
   loginAdmin() {
-    Firestore.instance.collection("admins").getDocuments().then((snapshot) {
+    FirebaseFirestore.instance.collection("admins").getDocuments().then((snapshot) {
       snapshot.documents.forEach((result) {
         if (result.data["id"] != _adminIDTextEditingController.text.trim()) {
           ScaffoldMessenger.of(context)

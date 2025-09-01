@@ -37,10 +37,10 @@ class AddAddress extends StatelessWidget {
 
                 // add to Firebase
                 EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
-                  .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+                  .doc(EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
                   .collection(EcommerceApp.subCollectionAddress)
-                  .document(DateTime.now().millisecondsSinceEpoch.toString())
-                .setData(model)
+                  .doc(DateTime.now().millisecondsSinceEpoch.toString())
+                .set(model)
                 .then((value){
                   final snack = SnackBar(content: Text("New Address added Successfully."));
                   ScaffoldMessenger.of(context).showSnackBar(snack);

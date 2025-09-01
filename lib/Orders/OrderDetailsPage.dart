@@ -31,10 +31,10 @@ class OrderDetails extends StatelessWidget {
           child: FutureBuilder<DocumentSnapshot>(
             future: EcommerceApp.firestore
                 .collection(EcommerceApp.collectionUser)
-                .document(EcommerceApp.sharedPreferences
+                .doc(EcommerceApp.sharedPreferences
                     .getString(EcommerceApp.userUID))
                 .collection(EcommerceApp.collectionOrders)
-                .document(orderID)
+                .doc(orderID)
                 .get(),
             builder: (c, snapshot) {
               Map dataMap;
@@ -149,10 +149,10 @@ class OrderDetails extends StatelessWidget {
                           FutureBuilder<DocumentSnapshot>(
                             future: EcommerceApp.firestore
                                 .collection(EcommerceApp.collectionUser)
-                                .document(EcommerceApp.sharedPreferences
+                                .doc(EcommerceApp.sharedPreferences
                                     .getString(EcommerceApp.userUID))
                                 .collection(EcommerceApp.subCollectionAddress)
-                                .document(dataMap[EcommerceApp.addressID])
+                                .doc(dataMap[EcommerceApp.addressID])
                                 .get(),
                             builder: (c, snap) {
                               return snap.hasData
@@ -399,11 +399,11 @@ class ShippingDetails extends StatelessWidget {
   confirmeduserOrderReceived(BuildContext context, String mOrderId) {
     EcommerceApp.firestore
         .collection(EcommerceApp.collectionUser)
-        .document(
-            EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+        .doc(
+            EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
         .collection(EcommerceApp.collectionOrders)
-        .document(mOrderId)
-        .updateData({"userOrderConfirmation": "Received"});
+        .doc(mOrderId)
+        .update({"userOrderConfirmation": "Received"});
 
     getOrderId = "";
 
@@ -418,11 +418,11 @@ class ShippingDetails extends StatelessWidget {
         orderTime, DateTime.now().millisecondsSinceEpoch)) {
       EcommerceApp.firestore
           .collection(EcommerceApp.collectionUser)
-          .document(
-              EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+          .doc(
+              EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
           .collection(EcommerceApp.collectionOrders)
-          .document(mOrderId)
-          .updateData({"cancellationStatus": "cancelled"});
+          .doc(mOrderId)
+          .update({"cancellationStatus": "cancelled"});
 
       getOrderId = "";
 

@@ -32,27 +32,27 @@ class _MyOrdersState extends State<AdminShiftOrders> {
                   itemCount: snapshot.data.length,
                   itemBuilder: (c, index){
                     return FutureBuilder<QuerySnapshot>(
-                        future: Firestore.instance
+                        future: FirebaseFirestore.instance
                             .collection("items")
-                            .where("shortInfo", whereIn: snapshot.data[index].productIDs)
+                            .where("shortInfo", whereIn: snapshot.data()![index].productIDs)
                             .getDocuments(),
 
                         builder: (c, snap){
 
-                          print(snapshot.data[index].orderID);
-                          print(snapshot.data[index].orderBy);
+                          print(snapshot.data()![index].orderID);
+                          print(snapshot.data()![index].orderBy);
 
                           return snap.hasData
                               ? AdminOrderCard(
                             itemCount: snap.data.documents.length,
                             data: snap.data.documents,
-                            orderID: snapshot.data[index].orderID,
-                            orderStatus: snapshot.data[index].orderStatus,
-                            cancellationStatus: snapshot.data[index].cancellationStatus,
-                            orderBy: snapshot.data[index].orderBy,
-                            addressID: snapshot.data[index].addressID,
-                            adminOrderCancellationStatus: snapshot.data[index].adminOrderCancellationStatus,
-                            totalAmount: snapshot.data[index].totalAmount.toString(),
+                            orderID: snapshot.data()![index].orderID,
+                            orderStatus: snapshot.data()![index].orderStatus,
+                            cancellationStatus: snapshot.data()![index].cancellationStatus,
+                            orderBy: snapshot.data()![index].orderBy,
+                            addressID: snapshot.data()![index].addressID,
+                            adminOrderCancellationStatus: snapshot.data()![index].adminOrderCancellationStatus,
+                            totalAmount: snapshot.data()![index].totalAmount.toString(),
                           )
                               : Center(child: circularProgress(),);
                         }
@@ -75,13 +75,13 @@ class _MyOrdersState extends State<AdminShiftOrders> {
             //   ),
             // )
             // StreamBuilder<QuerySnapshot>(
-            //   stream: Firestore.instance
+            //   stream: FirebaseFirestore.instance
             //       .collection(EcommerceApp.collectionUser)
             //       .snapshots(),
             //
             //   // builder: (c, snapshot){
             //   //
-            //   //   print(snapshot.data.documents[9].data['uid']);
+            //   //   print(snapshot.data!.docs[9].data()['uid']);
             //   //   //
             //   //   // return snapshot.hasData?
             //   //   //
@@ -97,7 +97,7 @@ class _MyOrdersState extends State<AdminShiftOrders> {
   Future<List<OrderModel>> getDocuments() async {
     int i = 0;
 
-    List<DocumentSnapshot> snaps = await Firestore.instance
+    List<DocumentSnapshot> snaps = await FirebaseFirestore.instance
         .collection("users")
         .getDocuments()
         .then((value) => value.documents);
@@ -109,7 +109,7 @@ class _MyOrdersState extends State<AdminShiftOrders> {
       print(snaps[i].data["uid"]);
       List weber = await EcommerceApp.firestore
           .collection(EcommerceApp.collectionUser)
-          .document(snaps[i].data["uid"])
+          .doc(snaps[i].data["uid"])
           .collection(EcommerceApp.collectionOrders)
           .orderBy('orderTime', descending: true)
           .getDocuments()
