@@ -18,7 +18,7 @@ class _ServiceRequestsState extends State<ServiceRequests> {
           appBar: MyAppBar(),
           drawer: MyDrawer(),
           body: StreamBuilder<QuerySnapshot>(
-            stream: Firestore.instance.collection('services').snapshots(),
+            stream: FirebaseFirestore.instance.collection('services').snapshots(),
             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (!snapshot.hasData) {
                 return Center(

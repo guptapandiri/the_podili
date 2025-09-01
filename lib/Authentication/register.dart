@@ -107,7 +107,7 @@ class _RegisterState extends State<Register> {
                 style: TextStyle(color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(
-                  primary: Colors.black,
+                  backgroundColor: Colors.black,
                   padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                   textStyle:
                       TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
@@ -130,7 +130,7 @@ class _RegisterState extends State<Register> {
   Future<void> _selectAndPickImage() async {
     print('Selected');
     _imageFile = File(await ImagePicker()
-        .getImage(source: ImageSource.gallery)
+        .pickImage(source: ImageSource.gallery)
         .then((pickedFile) => pickedFile.path));
     // _imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
   }
@@ -176,7 +176,7 @@ class _RegisterState extends State<Register> {
           );
         });
     String imageFileName = DateTime.now().millisecondsSinceEpoch.toString();
-    StorageReference storageReference =
+    Reference storageReference =
         FirebaseStorage.instance.ref().child(imageFileName);
     StorageUploadTask storageUploadTask = storageReference.putFile(_imageFile);
     StorageTaskSnapshot taskSnapshot = await storageUploadTask.onComplete;
@@ -189,7 +189,7 @@ class _RegisterState extends State<Register> {
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   void _registerUser() async {
-    FirebaseUser firebaseUser;
+    User? firebaseUser;
 
     await _auth
         .createUserWithEmailAndPassword(
@@ -218,8 +218,8 @@ class _RegisterState extends State<Register> {
     }
   }
 
-  Future saveUserInfoToFireStore(FirebaseUser fUser) async {
-    Firestore.instance.collection("users").document(fUser.uid).setData({
+  Future saveUserInfoToFireStore(User? fUser) async {
+    FirebaseFirebaseFirestore.instance.collection("users").doc(fUser!.uid).set({
       "uid": fUser.uid,
       "email": fUser.email,
       "name": _nameTextEditingController.text.trim(),
@@ -227,14 +227,14 @@ class _RegisterState extends State<Register> {
       EcommerceApp.userCartList: ["garbageValue"]
     });
 
-    await EcommerceApp.sharedPreferences.setString("uid", fUser.uid);
-    await EcommerceApp.sharedPreferences
-        .setString(EcommerceApp.userEmail, fUser.email);
-    await EcommerceApp.sharedPreferences.setString(
+    await EcommerceApp.sharedPreferences!.setString("uid", fUser.uid);
+    await EcommerceApp.sharedPreferences!
+        .setString(EcommerceApp.userEmail, fUser.email!);
+    await EcommerceApp.sharedPreferences!.setString(
         EcommerceApp.userName, _nameTextEditingController.text.trim());
-    await EcommerceApp.sharedPreferences
+    await EcommerceApp.sharedPreferences!
         .setString(EcommerceApp.userAvatarUrl, userImageUrl);
-    await EcommerceApp.sharedPreferences
+    await EcommerceApp.sharedPreferences!
         .setStringList(EcommerceApp.userCartList, ["garbageValue"]);
   }
 }

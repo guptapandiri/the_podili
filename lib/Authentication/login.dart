@@ -78,7 +78,7 @@ class _LoginState extends State<Login> {
                         });
               },
               style: ElevatedButton.styleFrom(
-                  primary: Colors.black,
+                  backgroundColor: Colors.black,
                   padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                   textStyle:
                       TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
@@ -124,7 +124,7 @@ class _LoginState extends State<Login> {
             message: "Authenticating, Please wait...",
           );
         });
-    FirebaseUser firebaseUser;
+    User? firebaseUser;
     await _auth
         .signInWithEmailAndPassword(
       email: _emailTextEditingController.text.trim(),
@@ -152,23 +152,23 @@ class _LoginState extends State<Login> {
     }
   }
 
-  Future readData(FirebaseUser fUser) async {
-    Firestore.instance
+  Future readData(User? fUser) async {
+    FirebaseFirebaseFirestore.instance
         .collection("users")
-        .document(fUser.uid)
+        .doc(fUser!.uid)
         .get()
         .then((dataSnapshot) async {
-      await EcommerceApp.sharedPreferences
-          .setString("uid", dataSnapshot.data[EcommerceApp.userUID]);
-      await EcommerceApp.sharedPreferences.setString(
-          EcommerceApp.userEmail, dataSnapshot.data[EcommerceApp.userEmail]);
-      await EcommerceApp.sharedPreferences.setString(
-          EcommerceApp.userName, dataSnapshot.data[EcommerceApp.userName]);
-      await EcommerceApp.sharedPreferences.setString(EcommerceApp.userAvatarUrl,
-          dataSnapshot.data[EcommerceApp.userAvatarUrl]);
+      await EcommerceApp.sharedPreferences!
+          .setString("uid", dataSnapshot.data()![EcommerceApp.userUID]);
+      await EcommerceApp.sharedPreferences!.setString(
+          EcommerceApp.userEmail, dataSnapshot.data()![EcommerceApp.userEmail]);
+      await EcommerceApp.sharedPreferences!.setString(
+          EcommerceApp.userName, dataSnapshot.data()![EcommerceApp.userName]);
+      await EcommerceApp.sharedPreferences!.setString(EcommerceApp.userAvatarUrl,
+          dataSnapshot.data()![EcommerceApp.userAvatarUrl]);
       List<String> cartList =
-          dataSnapshot.data[EcommerceApp.userCartList].cast<String>();
-      await EcommerceApp.sharedPreferences
+          dataSnapshot.data()![EcommerceApp.userCartList].cast<String>();
+      await EcommerceApp.sharedPreferences!
           .setStringList(EcommerceApp.userCartList, cartList);
     });
   }

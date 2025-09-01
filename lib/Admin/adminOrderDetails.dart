@@ -48,15 +48,15 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
           child: FutureBuilder<DocumentSnapshot>(
             future: EcommerceApp.firestore
                 .collection(EcommerceApp.collectionUser)
-                .document(widget.orderBy)
+                .doc(widget.orderBy)
                 .collection(EcommerceApp.collectionOrders)
-                .document(widget.orderID)
+                .doc(widget.orderID)
                 .get(),
             builder: (c, snapshot) {
               Map dataMap;
               if (snapshot.hasData) {
                 dataMap = snapshot.data.data;
-                print(snapshot.data['isSuccess']);
+                print(snapshot.data()!['isSuccess']);
               } else {
                 // print(widget.orderBy);
                 // print(widget.orderID);
@@ -306,9 +306,9 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
                           FutureBuilder<DocumentSnapshot>(
                             future: EcommerceApp.firestore
                                 .collection(EcommerceApp.collectionUser)
-                                .document(widget.orderBy)
+                                .doc(widget.orderBy)
                                 .collection(EcommerceApp.subCollectionAddress)
-                                .document(dataMap[EcommerceApp.addressID])
+                                .doc(dataMap[EcommerceApp.addressID])
                                 .get(),
                             builder: (c, snap) {
                               return snap.hasData
@@ -344,10 +344,10 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
   updateOrderStatus(BuildContext context, String status) {
     EcommerceApp.firestore
         .collection(EcommerceApp.collectionUser)
-        .document(widget.orderBy)
+        .doc(widget.orderBy)
         .collection(EcommerceApp.collectionOrders)
-        .document(widget.orderID)
-        .updateData({"orderStatus": status}).whenComplete(() {
+        .doc(widget.orderID)
+        .update({"orderStatus": status}).whenComplete(() {
       getOrderId = "";
 
       Route route = MaterialPageRoute(builder: (c) => AdminShiftOrders());
@@ -603,11 +603,11 @@ class ShippingDetails extends StatelessWidget {
   confirmAdminOrderDelivered(BuildContext context, String mOrderId) {
     EcommerceApp.firestore
         .collection(EcommerceApp.collectionUser)
-        .document(
-            EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+        .doc(
+            EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
         .collection(EcommerceApp.collectionOrders)
-        .document(mOrderId)
-        .updateData({"adminOrderConfirmation": "delivered"});
+        .doc(mOrderId)
+        .update({"adminOrderConfirmation": "delivered"});
 
     getOrderId = "";
 
@@ -622,10 +622,10 @@ class ShippingDetails extends StatelessWidget {
     print(orderBy);
     EcommerceApp.firestore
         .collection(EcommerceApp.collectionUser)
-        .document(orderBy)
+        .doc(orderBy)
         .collection(EcommerceApp.collectionOrders)
-        .document(mOrderId)
-        .updateData({"adminOrderCancellationStatus": cancelStatus});
+        .doc(mOrderId)
+        .update({"adminOrderCancellationStatus": cancelStatus});
 
     getOrderId = "";
 

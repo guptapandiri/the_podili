@@ -147,7 +147,7 @@ class _AdminSignInScreenState extends State<AdminSignInScreen> {
   }
 
   loginAdmin() {
-    Firestore.instance.collection("admins").getDocuments().then((snapshot) {
+    FirebaseFirestore.instance.collection("admins").getDocuments().then((snapshot) {
       snapshot.documents.forEach((result) {
         if (result.data["id"] != _adminIDTextEditingController.text.trim()) {
           ScaffoldMessenger.of(context)

@@ -14,7 +14,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
   TextEditingController _phoneNumberController = TextEditingController();
   TextEditingController _otpController = TextEditingController();
 
-  FirebaseUser _firebaseUser;
+  User _firebaseUser;
   String _status;
 
   AuthCredential _phoneAuthCredential;
@@ -37,7 +37,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
   }
 
   Future<void> _getFirebaseUser() async {
-    this._firebaseUser = await FirebaseAuth.instance.currentUser();
+    this._firebaseUser = await FirebaseAuth.instance.currentUser;
     setState(() {
       _status =
           (_firebaseUser == null) ? 'Not Logged In\n' : 'Already LoggedIn\n';
@@ -84,8 +84,8 @@ class _PhoneAuthState extends State<PhoneAuth> {
     }
   }
 
-  checkUser(FirebaseUser fUser) {
-    Firestore.instance
+  checkUser(User fUser) {
+    FirebaseFirestore.instance
         .collection("users")
         .where("phonenumber", isEqualTo: fUser.phoneNumber)
         .getDocuments()
@@ -106,8 +106,8 @@ class _PhoneAuthState extends State<PhoneAuth> {
     });
   }
 
-  Future saveUserInfoToFireStore(FirebaseUser fUser) async {
-    Firestore.instance.collection("users").document(fUser.uid).setData({
+  Future saveUserInfoToFireStore(User fUser) async {
+    FirebaseFirestore.instance.collection("users").doc(fUser.uid).set({
       "uid": fUser.uid,
       "phonenumber": fUser.phoneNumber,
       "isAdmin": "0",
@@ -118,12 +118,12 @@ class _PhoneAuthState extends State<PhoneAuth> {
       EcommerceApp.userCartList: ["garbageValue"]
     });
 
-    await EcommerceApp.sharedPreferences.setString("uid", fUser.uid);
+    await EcommerceApp.sharedPreferences!.setString("uid", fUser.uid);
     await EcommerceApp.sharedPreferences
         .setString(EcommerceApp.phoneNumber, fUser.phoneNumber);
 
-    await EcommerceApp.sharedPreferences.setString("isAdmin", "0");
-    // await EcommerceApp.sharedPreferences.setString(
+    await EcommerceApp.sharedPreferences!.setString("isAdmin", "0");
+    // await EcommerceApp.sharedPreferences!.setString(
     //     EcommerceApp.userName, _nameTextEditingController.text.trim());
     // await EcommerceApp.sharedPreferences
     //     .setString(EcommerceApp.userAvatarUrl, userImageUrl);
@@ -134,13 +134,13 @@ class _PhoneAuthState extends State<PhoneAuth> {
     Navigator.pushReplacement(context, route);
   }
 
-  Future saveUserInfoToSharedPreferences(FirebaseUser fUser) async {
+  Future saveUserInfoToSharedPreferences(User fUser) async {
     // print(f);
-    // Firestore.instance.collection("users").document(fUser.uid).get()
+    // FirebaseFirestore.instance.collection("users").doc(fUser.uid).get()
     DocumentSnapshot variable =
-        await Firestore.instance.collection('users').document(fUser.uid).get();
+        await FirebaseFirestore.instance.collection('users').doc(fUser.uid).get();
 
-    await EcommerceApp.sharedPreferences.setString("uid", fUser.uid);
+    await EcommerceApp.sharedPreferences!.setString("uid", fUser.uid);
     await EcommerceApp.sharedPreferences
         .setString(EcommerceApp.phoneNumber, fUser.phoneNumber);
 
@@ -149,7 +149,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
     await EcommerceApp.sharedPreferences
         .setString("isAdmin", variable['isAdmin']);
 
-    // await EcommerceApp.sharedPreferences.setString(
+    // await EcommerceApp.sharedPreferences!.setString(
     //     EcommerceApp.userName, _nameTextEditingController.text.trim());
     // await EcommerceApp.sharedPreferences
     //     .setString(EcommerceApp.userAvatarUrl, userImageUrl);
@@ -161,7 +161,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
   }
 
   // Future<void> _logout() async {
-  //   /// Method to Logout the `FirebaseUser` (`_firebaseUser`)
+  //   /// Method to Logout the `User` (`_firebaseUser`)
   //   try {
   //     // signout code
   //     await FirebaseAuth.instance.signOut();

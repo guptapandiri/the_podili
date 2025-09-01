@@ -87,7 +87,7 @@ class _SearchProductState extends State<SearchProduct> {
   }
 
   Future startSearching(String query) async {
-    docList = Firestore.instance
+    docList = FirebaseFirestore.instance
         .collection("items")
         .where("shortInfo", isGreaterThanOrEqualTo: query)
         .getDocuments();

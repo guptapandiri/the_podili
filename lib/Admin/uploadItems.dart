@@ -136,26 +136,30 @@ class _UploadPageState extends State<UploadPage>
 
   capturePhotoWithCamera() async {
     Navigator.pop(context);
-    File imageFile = File(await ImagePicker()
-        .getImage(source: ImageSource.camera, maxHeight: 680.0, maxWidth: 970.0)
-        .then((pickedFile) => pickedFile.path));
+    XFile? pickedFile = await ImagePicker()
+        .pickImage(source: ImageSource.camera, maxHeight: 680.0, maxWidth: 970.0);
 
-    setState(() {
-      file = imageFile;
-    });
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+      setState(() {
+        file = imageFile;
+      });
+    }
   }
 
   pickPhotoFromGallery() async {
     Navigator.pop(context);
-    File imageFile = File(await ImagePicker()
-        .getImage(
+    XFile? pickedFile = await ImagePicker()
+        .pickImage(
           source: ImageSource.gallery,
-        )
-        .then((pickedFile) => pickedFile.path));
+        );
 
-    setState(() {
-      file = imageFile;
-    });
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+      setState(() {
+        file = imageFile;
+      });
+    }
   }
 
   displayAdminUploadFormScreen() {
@@ -359,7 +363,7 @@ class _UploadPageState extends State<UploadPage>
   }
 
   Future<String> uploadItemImage(mFileImage) async {
-    final StorageReference storageReference =
+    final Reference storageReference =
         FirebaseStorage.instance.ref().child("Items");
     StorageUploadTask uploadTask =
         storageReference.child("product_$productId.jpg").putFile(mFileImage);
@@ -369,8 +373,8 @@ class _UploadPageState extends State<UploadPage>
   }
 
   saveItemInfo(String downloadUrl) {
-    final itemsRef = Firestore.instance.collection("items");
-    itemsRef.document(productId).setData({
+    final itemsRef = FirebaseFirestore.instance.collection("items");
+    itemsRef.doc(productId).set({
       "shortInfo": _shortInfoTextEditingController.text.trim(),
       "longDescription": _descriptionTextEditingController.text.trim(),
       "price": int.parse(_priceTextEditingController.text),

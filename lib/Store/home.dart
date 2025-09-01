@@ -99,7 +99,7 @@ class _HomeState extends State<Home> {
         slivers: [
           SliverPersistentHeader(pinned: true, delegate: SearchBoxDelegate()),
           StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance
+              stream: FirebaseFirestore.instance
                   .collection("items")
                   .where("category", isEqualTo: widget.category)
                   .orderBy("publishedDate", descending: true)
@@ -296,13 +296,13 @@ void checkItemInCart(String shortInfoAsID, BuildContext context) {
 
 addItemToCart(String shortInfoAsID, BuildContext context) {
   List tempCartList =
-      EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
+      EcommerceApp.sharedPreferences!.getStringList(EcommerceApp.userCartList);
   tempCartList.add(shortInfoAsID);
 
   EcommerceApp.firestore
       .collection(EcommerceApp.collectionUser)
-      .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-      .updateData({
+      .doc(EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
+      .update({
     EcommerceApp.userCartList: tempCartList,
   }).then((value) {
     Fluttertoast.showToast(msg: "Item Added to CartSuccessfully.");

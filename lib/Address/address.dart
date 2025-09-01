@@ -51,7 +51,7 @@ class _AddressState extends State<Address>
                   child: StreamBuilder<QuerySnapshot>(
                     stream: EcommerceApp.firestore
                     .collection(EcommerceApp.collectionUser)
-                    .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+                    .doc(EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
                     .collection(EcommerceApp.subCollectionAddress).snapshots(),
 
                     builder: (context,snapshot){

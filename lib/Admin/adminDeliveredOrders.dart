@@ -36,9 +36,9 @@ class _MyOrdersState extends State<AdminDeliveredOrders> {
                   itemCount: snapshot.data.length,
                   itemBuilder: (c, index){
                     return FutureBuilder<QuerySnapshot>(
-                        future: Firestore.instance
+                        future: FirebaseFirestore.instance
                             .collection("items")
-                            .where("shortInfo", whereIn: snapshot.data[index].productIDs)
+                            .where("shortInfo", whereIn: snapshot.data()![index].productIDs)
                             .getDocuments(),
 
                         builder: (c, snap){
@@ -46,11 +46,11 @@ class _MyOrdersState extends State<AdminDeliveredOrders> {
                               ? AdminOrderCard(
                             itemCount: snap.data.documents.length,
                             data: snap.data.documents,
-                            orderID: snapshot.data[index].orderID,
-                            orderStatus: snapshot.data[index].orderStatus,
-                            cancellationStatus: snapshot.data[index].cancellationStatus,
-                            orderBy: snapshot.data[index].orderBy,
-                            addressID: snapshot.data[index].addressID,
+                            orderID: snapshot.data()![index].orderID,
+                            orderStatus: snapshot.data()![index].orderStatus,
+                            cancellationStatus: snapshot.data()![index].cancellationStatus,
+                            orderBy: snapshot.data()![index].orderBy,
+                            addressID: snapshot.data()![index].addressID,
                           )
                               : Center(child: circularProgress(),);
                         }
@@ -73,7 +73,7 @@ class _MyOrdersState extends State<AdminDeliveredOrders> {
           //   ),
           // )
           // StreamBuilder<QuerySnapshot>(
-          //   stream: Firestore.instance
+          //   stream: FirebaseFirestore.instance
           //       .collection(EcommerceApp.collectionUser)
           //       .snapshots(),
           //
@@ -95,7 +95,7 @@ class _MyOrdersState extends State<AdminDeliveredOrders> {
  Future<List<OrderModel>> getDocuments() async {
     int i = 0;
 
-    List<DocumentSnapshot> snaps = await Firestore.instance
+    List<DocumentSnapshot> snaps = await FirebaseFirestore.instance
         .collection("users")
         .getDocuments()
         .then((value) => value.documents);
@@ -107,7 +107,7 @@ class _MyOrdersState extends State<AdminDeliveredOrders> {
       print(snaps[i].data["uid"]);
       List weber = await EcommerceApp.firestore
           .collection(EcommerceApp.collectionUser)
-          .document(snaps[i].data["uid"])
+          .doc(snaps[i].data["uid"])
           .collection(EcommerceApp.collectionOrders)
           .orderBy('orderTime', descending: true)
           .getDocuments()

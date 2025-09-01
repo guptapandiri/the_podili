@@ -163,26 +163,28 @@ class _AddNewItemState extends State<AddNewItem> {
 
   capturePhotoWithCamera() async {
     Navigator.pop(context);
-    File imageFile = File(await ImagePicker()
-        .getImage(source: ImageSource.camera, maxHeight: 680.0, maxWidth: 970.0)
-        .then((pickedFile) => pickedFile.path));
+    XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.camera, maxHeight: 680.0, maxWidth: 970.0);
+
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
 
     setState(() {
       file = imageFile;
     });
+    }
   }
 
   pickPhotoFromGallery() async {
     Navigator.pop(context);
-    File imageFile = File(await ImagePicker()
-        .getImage(
-          source: ImageSource.gallery,
-        )
-        .then((pickedFile) => pickedFile.path));
+    XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
 
     setState(() {
       file = imageFile;
     });
+    }
   }
 
   takeImage(mContext) {
@@ -318,7 +320,7 @@ class _AddNewItemState extends State<AddNewItem> {
   }
 
   Future<String> uploadItemImage(mFileImage) async {
-    final StorageReference storageReference =
+    final Reference storageReference =
         FirebaseStorage.instance.ref().child("Items");
     StorageUploadTask uploadTask =
         storageReference.child("product_$productId.jpg").putFile(mFileImage);
@@ -328,8 +330,8 @@ class _AddNewItemState extends State<AddNewItem> {
   }
 
   saveItemInfo(String downloadUrl) {
-    final itemsRef = Firestore.instance.collection("items");
-    itemsRef.document(productId).setData({
+    final itemsRef = FirebaseFirestore.instance.collection("items");
+    itemsRef.doc(productId).set({
       "shortInfo": shortInfo.trim(),
       "longDescription": description.trim(),
       "price": int.parse(price),

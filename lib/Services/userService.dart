@@ -160,8 +160,8 @@ class _UserServiceState extends State<UserService> {
 
 
   saveItemInfo() {
-    final servicesRef = Firestore.instance.collection("services");
-    servicesRef.document(serviceId).setData({
+    final servicesRef = FirebaseFirestore.instance.collection("services");
+    servicesRef.doc(serviceId).set({
       "name" : name,
       "contactNumber" : contactNumber,
       "category": _category,

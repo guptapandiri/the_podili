@@ -639,7 +639,7 @@ class _StoreHomeState extends State<StoreHome> {
                       ],
                     ))),
             // StreamBuilder<QuerySnapshot>(
-            //     stream: Firestore.instance
+            //     stream: FirebaseFirestore.instance
             //         .collection("items")
             //         .limit(15)
             //         .orderBy("publishedDate", descending: true)
@@ -1093,13 +1093,13 @@ void checkItemInCart(String shortInfoAsID, BuildContext context) {
 
 addItemToCart(String shortInfoAsID, BuildContext context) {
   List tempCartList =
-      EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
+      EcommerceApp.sharedPreferences!.getStringList(EcommerceApp.userCartList);
   tempCartList.add(shortInfoAsID);
 
   EcommerceApp.firestore
       .collection(EcommerceApp.collectionUser)
-      .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-      .updateData({
+      .doc(EcommerceApp.sharedPreferences!.getString(EcommerceApp.userUID))
+      .update({
     EcommerceApp.userCartList: tempCartList,
   }).then((value) {
     Fluttertoast.showToast(
