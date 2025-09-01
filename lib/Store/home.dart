@@ -111,15 +111,14 @@ class _HomeState extends State<Home> {
                           child: circularProgress(),
                         ),
                       )
-                    : SliverStaggeredGrid.countBuilder(
+                    : SliverMasonryGrid.count(
                         crossAxisCount: 1,
-                        staggeredTileBuilder: (c) => StaggeredTile.fit(1),
                         itemBuilder: (context, index) {
                           ItemModel model = ItemModel.fromJson(
-                              dataSnapshot.data.documents[index].data);
+                              dataSnapshot.data!.docs[index].data());
                           return sourceInfo(model, context);
                         },
-                        itemCount: dataSnapshot.data.documents.length,
+                        childCount: dataSnapshot.data!.docs.length,
                       );
               })
         ],

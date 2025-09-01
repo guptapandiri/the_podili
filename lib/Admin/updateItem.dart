@@ -175,7 +175,7 @@ class _UpdateItemState extends State<UpdateItem> {
                                   SizedBox(
                                     height: 16,
                                   ),
-                                  submitButton(snapshot.data.documentID)
+                                  submitButton(snapshot.data.id)
                                 ],
                               ),
                             ),

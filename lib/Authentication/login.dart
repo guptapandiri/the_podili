@@ -96,7 +96,7 @@ class _LoginState extends State<Login> {
               color: Colors.pink,
             ),
             SizedBox(height: 15.0),
-            FlatButton.icon(
+            TextButton.icon(
               onPressed: () => Navigator.push(context,
                   MaterialPageRoute(builder: (context) => AdminSignInPage())),
               icon: (Icon(

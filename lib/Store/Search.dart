@@ -32,7 +32,7 @@ class _SearchProductState extends State<SearchProduct> {
                     itemCount: snap.data.documents.length,
                     itemBuilder: (context, index) {
                       ItemModel model =
-                          ItemModel.fromJson(snap.data.documents[index].data);
+                          ItemModel.fromJson(snap.data!.docs[index].data());
                       return sourceInfo(model, context);
                     })
                 : Text("No Data Available.");

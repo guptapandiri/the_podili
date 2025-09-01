@@ -66,9 +66,9 @@ class _AddressState extends State<Address>
                             return AddressCard(
                               currentIndex: address.count,
                               value: index,
-                              addressId: snapshot.data.documents[index].documentID,
+                              addressId: snapshot.data.documents[index].id,
                               totalAmount: widget.totalAmount,
-                              model: AddressModel.fromJson(snapshot.data.documents[index].data),
+                              model: AddressModel.fromJson(snapshot.data!.docs[index].data()),
                             );
                           },
 

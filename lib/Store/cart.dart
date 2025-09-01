@@ -146,7 +146,7 @@ class _CartPageState extends State<CartPage> {
                             delegate: SliverChildBuilderDelegate(
                               (context, index) {
                                 ItemModel model = ItemModel.fromJson(
-                                    snapshot.data.documents[index].data);
+                                    snapshot.data!.docs[index].data());
 
                                 if (index == 0) {
                                   totalAmount = 0;

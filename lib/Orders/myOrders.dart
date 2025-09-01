@@ -35,7 +35,7 @@ class _MyOrdersState extends State<MyOrders> {
                       return FutureBuilder<QuerySnapshot>(
                           future: FirebaseFirestore.instance
                             .collection("items")
-                            .where("shortInfo", whereIn: snapshot.data.documents[index].data[EcommerceApp.productID])
+                            .where("shortInfo", whereIn: snapshot.data!.docs[index].data()[EcommerceApp.productID])
                           .getDocuments(),
 
                           builder: (c, snap){
@@ -43,11 +43,11 @@ class _MyOrdersState extends State<MyOrders> {
                             ? OrderCard(
                               itemCount: snap.data.documents.length,
                               data: snap.data.documents,
-                              orderID: snapshot.data.documents[index].documentID,
-                              orderStatus: snapshot.data.documents[index].data['orderStatus'],
-                              cancellationStatus: snapshot.data.documents[index].data['cancellationStatus'],
-                              adminOrderCancellationStatus: snapshot.data.documents[index].data['adminOrderCancellationStatus'],
-                              totalPrice: snapshot.data.documents[index].data['totalAmount'].toString(),
+                              orderID: snapshot.data.documents[index].id,
+                              orderStatus: snapshot.data!.docs[index].data()['orderStatus'],
+                              cancellationStatus: snapshot.data!.docs[index].data()['cancellationStatus'],
+                              adminOrderCancellationStatus: snapshot.data!.docs[index].data()['adminOrderCancellationStatus'],
+                              totalPrice: snapshot.data!.docs[index].data()['totalAmount'].toString(),
                             )
                                 : Center(child: circularProgress(),);
                           }

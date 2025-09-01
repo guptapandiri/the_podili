@@ -29,7 +29,7 @@ class _ServiceRequestsState extends State<ServiceRequests> {
                   children: snapshot.data.documents.map((document) {
                     return  ListTile(
                       onTap: (){
-                        viewRequest(document.documentID);
+                        viewRequest(document.id);
                       },
                       leading: CircleAvatar(
                         backgroundImage: NetworkImage('https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Fservices.png?alt=media&token=0977ff66-b869-4279-93ca-5b0ae86832cb'),
@@ -50,7 +50,7 @@ class _ServiceRequestsState extends State<ServiceRequests> {
                       //           color: Colors.grey,
                       //         ),
                       //         onPressed: () {
-                      //           editItem(document.documentID);
+                      //           editItem(document.id);
                       //         }),
                       //
                       //   ],

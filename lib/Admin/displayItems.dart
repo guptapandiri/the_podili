@@ -42,7 +42,7 @@ class _DisplayItemsState extends State<DisplayItems> {
                             color: Colors.grey,
                           ),
                           onPressed: () {
-                            editItem(document.documentID);
+                            editItem(document.id);
                           }),
                       document['isHide'] ? IconButton(
                           icon: Icon(
@@ -50,14 +50,14 @@ class _DisplayItemsState extends State<DisplayItems> {
                             color: Colors.green,
                           ),
                           onPressed: () {
-                            showItem(document.documentID);
+                            showItem(document.id);
                           }) : IconButton(
                           icon: Icon(
                             Icons.visibility_off,
                             color: Colors.red,
                           ),
                           onPressed: () {
-                            hideItem(document.documentID);
+                            hideItem(document.id);
                           })  ,
                     ],
                   ),

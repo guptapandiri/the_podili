@@ -81,7 +81,7 @@ class _MyOrdersState extends State<AdminShiftOrders> {
             //
             //   // builder: (c, snapshot){
             //   //
-            //   //   print(snapshot.data.documents[9].data['uid']);
+            //   //   print(snapshot.data!.docs[9].data()['uid']);
             //   //   //
             //   //   // return snapshot.hasData?
             //   //   //
